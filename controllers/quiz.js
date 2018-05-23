@@ -6,7 +6,7 @@ var nuevo = 1;
 // Autoload the quiz with id equals to :quizId
 exports.load = (req, res, next, quizId) => {
 
-    models.quiz.findById(quizId)
+    sequelize.models.quiz.findById(quizId)
     .then(quiz => {
         if (quiz) {
             req.quiz = quiz;
@@ -22,7 +22,7 @@ exports.load = (req, res, next, quizId) => {
 // GET /quizzes
 exports.index = (req, res, next) => {
 
-    models.quiz.findAll()
+    sequelize.models.quiz.findAll()
     .then(quizzes => {
         res.render('quizzes/index.ejs', {quizzes});
     })
@@ -167,7 +167,7 @@ exports.randomplay = (req, res, next) => {
     var c1 = {
         "id": { [Sequelize.Op.notIn]: req.session.randomplay }
     };
-    return models.quiz.count({ where: c1 })
+    return sequelize.models.quiz.count({ where: c1 })
         .then(rest => {
             if (rest === 0) {
                 var score = req.session.randomplay.length;
@@ -176,7 +176,7 @@ exports.randomplay = (req, res, next) => {
                 res.render('quizzes/random_nomore', { score: score });
             }
             randomId = Math.floor(Math.random() * rest);
-            return models.quiz.findAll({ where: c1, limit: 1, offset: randomId })
+            return sequelize.models.quiz.findAll({ where: c1, limit: 1, offset: randomId })
 
                 .then(quiz => {
                     return quiz[0];
@@ -205,8 +205,8 @@ exports.randomcheck = (req, res, next) => {
         var score = req.session.randomplay.length;
         res.render('quizzes/random_result', {score: score, answer, result})
     } else {       //si no es correcto, compruebo la puntuacion actual y renderizo la pantalla de resultado
-        var puntuacion = req.session.randomplay.length;
+        var score = req.session.randomplay.length;
         nuevo = 1;
-        res.render('quizzes/random_result', { score: puntuacion, answer, result })
+        res.render('quizzes/random_result', { score: score, answer, result })
     }
 };
