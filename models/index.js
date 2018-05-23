@@ -34,7 +34,7 @@ sequelize.sync()
     .catch(err => {
         console.log(err);
     });
-})
+});
 //sequelize.sync()
 //.then(() => console.log('Data Bases created successfully'))
 //.catch(error => {
