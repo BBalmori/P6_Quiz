@@ -23,18 +23,20 @@ sequelize.import(path.join(__dirname,'session'));
 sequelize.sync()
     .then(() => sequelize.models.quiz.count())
     .then((count) => {
-    if (!count) {
-        return sequelize.models.quiz.bulkCreate([
-            { question: 'Capital de España', answer: 'Madrid' },
-            { question: 'Capital de Portugal', answer: 'Lisboa' },
-            { question: 'Capital de Francia', answer: 'París' },
-            { question: 'Capital de Italia', answer: 'Roma' }
-        ]);
+        if (!count) {
+            return sequelize.models.quiz.bulkCreate([
+                { question: 'Capital de España', answer: 'Madrid' },
+                { question: 'Capital de Portugal', answer: 'Lisboa' },
+                { question: 'Capital de Francia', answer: 'París' },
+                { question: 'Capital de Italia', answer: 'Roma' }
+            ]);
+        }
     })
     .catch(err => {
         console.log(err);
     });
-});
+
+
 //sequelize.sync()
 //.then(() => console.log('Data Bases created successfully'))
 //.catch(error => {
