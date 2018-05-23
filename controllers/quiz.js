@@ -201,7 +201,7 @@ exports.randomcheck = (req, res, next) => {
     const quizId = quiz.id;
 
     if (result) {
-        req.session.randomplay.push(quiz.id);
+        req.session.randomplay.push(quiz.Id);
         var score = req.session.randomplay.length;
         res.render('quizzes/random_result', {score: score, answer, result})
     } else {       //si no es correcto, compruebo la puntuacion actual y renderizo la pantalla de resultado
