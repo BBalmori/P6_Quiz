@@ -1,7 +1,7 @@
 const Sequelize = require("sequelize");
 const { models } = require("../models");
 
-var nuevo = 1;
+var nuevaPuntuacion = 1;
 
 // Autoload the quiz with id equals to :quizId
 exports.load = (req, res, next, quizId) => {
@@ -160,20 +160,20 @@ exports.check = (req, res, next) => {
 // GET /quizzes/randomplay
 exports.randomplay = (req, res, next) => {
 
-    if (req.session.randomplay === undefined || nuevo === 1) 
+    if (req.session.randomplay === undefined || nuevaPuntuacion === 1) 
         req.session.randomplay = [];
-        nuevo = 0;
-
+    nuevaPuntuacion = 0;
+   
     var c1 = {
         "id": { [Sequelize.Op.notIn]: req.session.randomplay }
     };
     return models.quiz.count({ where: c1 })
         .then(rest => {
             if (rest === 0) {
-                var score = req.session.randomplay.length;
+                var aciertos = req.session.randomplay.length;
                 req.session.randomplay = [];
-                nuevo = 1;
-                res.render('quizzes/random_nomore', { score: score });
+                nuevaPuntuacion = 1;
+                res.render('quizzes/random_nomore', { score: aciertos });
             }
             randomId = Math.floor(Math.random() * rest);
             return models.quiz.findAll({ where: c1, limit: 1, offset: randomId })
@@ -183,8 +183,8 @@ exports.randomplay = (req, res, next) => {
                 })
         })
         .then(quiz1 => {
-            var score = req.session.randomplay.length;
-            res.render('quizzes/random_play', { quiz: quiz1, score: score });
+            var aciertos = req.session.randomplay.length;
+            res.render('quizzes/random_play', { quiz: quiz1, score: aciertos });
         })
         .catch(err => {
             console.log(err);
@@ -202,11 +202,11 @@ exports.randomcheck = (req, res, next) => {
 
     if (result) {
         req.session.randomplay.push(quiz.Id);
-        var score = req.session.randomplay.length;
-        res.render('quizzes/random_result', {score: score, answer, result})
-    } else {       //si no es correcto, compruebo la puntuacion actual y renderizo la pantalla de resultado
-        var score = req.session.randomplay.length;
-        nuevo = 1;
-        res.render('quizzes/random_result', { score: score, answer, result })
+        var aciertos = req.session.randomplay.length;
+        res.render('quizzes/random_result', { score: aciertos, answer, result })
+    } else {     
+        var aciertos = req.session.randomplay.length;
+        nuevaPuntuacion = 1;
+        res.render('quizzes/random_result', { score: aciertos, answer, result })
     }
 };
