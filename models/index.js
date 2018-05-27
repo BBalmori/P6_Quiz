@@ -7,7 +7,7 @@ const Sequelize = require('sequelize');
 // To use SQLite data base:
 //    DATABASE_URL = sqlite:quiz.sqlite
 // To use  Heroku Postgres data base:
-//    DATABASE_URL = postgres://user:passwd@host:port/database
+//    DATABASE_URL = postgres://user:passwd@host:port/database;
 
 const url = process.env.DATABASE_URL || "sqlite:quiz.sqlite";
 
@@ -40,7 +40,7 @@ quiz.belongsTo(user, { as: 'author', foreignKey: 'authorId' });
 
 // Relation 1-to-N between Tips and User:
 user.hasMany(tip, { foreignKey: 'authorId' });
-user.belongsTo(user, { as: 'author', foreignKey: 'authorId' }); ////
+tip.belongsTo(user, { as: 'author', foreignKey: 'authorId' }); ////
 
 
 module.exports = sequelize;
