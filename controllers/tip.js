@@ -17,6 +17,20 @@ exports.load = (req, res, next, tipId) => {
     .catch(error => next(error));
 };
 
+// GET /quizzes/:quizId/tips/new
+exports.new = (req, res, next) => {
+
+    const tip = {
+        text: ""
+    };
+
+    const { quiz } = req;
+
+    res.render('tips/new', {
+        tip,
+        quiz
+    });
+};
 
 // POST /quizzes/:quizId/tips
 exports.create = (req, res, next) => {
@@ -80,9 +94,10 @@ exports.destroy = (req, res, next) => {
 
 // MW that allows actions only if the user logged in is admin or is the author of the quiz.
 exports.adminOrAuthorRequired = (req, res, next) => {
+    const { tip, session } = req;
 
-    const isAdmin = req.session.user.isAdmin; //cambiado
-    const isAuthor = req.tip.authorId === req.session.user.id; //cambiado
+    const isAuthor = tip.authorId === session.user.id;
+    const isAdmin = session.user.isAdmin;
 
     if (isAdmin || isAuthor) {
         next();
@@ -97,7 +112,7 @@ exports.edit = (req, res, next) => {
 
     const { tip, quiz } = req;
 
-    res.render('tips/editejs', { tip, quiz });
+    res.render('tips/edit.ejs', { tip, quiz });
 }; 
 
 
@@ -109,7 +124,7 @@ exports.update = (req, res, next) => {
     tip.text = body.newtip;
 
     tip.save({ fields: ["text"] }) //cambiado text y tip
-        .then(quiz => {
+        .then(tip => {
             req.flash('success', 'Tip edited successfully.');
             res.redirect('/goback');
         })
@@ -119,7 +134,7 @@ exports.update = (req, res, next) => {
             res.render('tips/edit', { tip }); //
         })
         .catch(error => {
-            req.flash('error', 'Error editing the Quiz: ' + error.message);
+            req.flash('error', 'Error editing the Tip: ' + error.message);
             next(error);
         });
 };

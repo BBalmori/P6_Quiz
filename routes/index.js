@@ -123,12 +123,18 @@ router.get('/quizzes/:quizId(\\d+)/check', quizController.check);
 router.get('/quizzes/randomplay', quizController.randomplay);
 router.get('/quizzes/randomcheck/:quizId(\\d+)', quizController.randomcheck);
 
-router.get('/quizzes/:quizId/tips/:tipId/edit'); ////////////
-router.put('/quizzes:quizId/tips/:tipIs'); ////////////
-
-router.post('/quizzes/:quizId(\\d+)/tips',
+router.get('/quizzes/:quizId/tips/:tipId/edit',
     sessionController.loginRequired,
-    tipController.create);
+    tipController.adminOrAuthorRequired,
+    tipController.edit);
+
+router.put('/quizzes/:quizId/tips/:tipId',
+    sessionController.loginRequired,
+    tipController.adminOrAuthorRequired,
+    tipController.update); 
+
+router.get('/quizzes/:quizId(\\d+)/tips/new', sessionController.loginRequired, tipController.new);
+router.post('/quizzes/:quizId(\\d+)/tips', sessionController.loginRequired, tipController.create);
 router.put('/quizzes/:quizId(\\d+)/tips/:tipId(\\d+)/accept',
     sessionController.loginRequired,
     quizController.adminOrAuthorRequired,
